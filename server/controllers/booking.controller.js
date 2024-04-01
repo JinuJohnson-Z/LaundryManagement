@@ -1,4 +1,4 @@
-import Shop from '../models/shop.model.js'
+import Shop from '../models/booking.model.js'
 import extend from 'lodash/extend.js'
 import errorHandler from './../helpers/dbErrorHandler.js'
 import formidable from 'formidable'
@@ -6,6 +6,7 @@ import fs from 'fs'
 //import defaultImage from './../../client/assets/images/default.png'
 
 const create = (req, res) => {
+    debugger
   console.log("no create");
   let form = new formidable.IncomingForm()
   form.keepExtensions = true
@@ -16,7 +17,7 @@ const create = (req, res) => {
       })
     }
     let shop = new Shop(fields)
-    shop.owner= req.profile
+   // shop.owner= req.profile
     if(files.image){
       shop.image.data = fs.readFileSync(files.image.path)
       shop.image.contentType = files.image.type
@@ -35,7 +36,7 @@ const create = (req, res) => {
 const laundryByID = async (req, res, next, id) => {
   debugger
   try {
-    let shop = await Shop.findById(id).populate('owner', '_id name').exec()
+    let shop = await Shop.findById(id).populate('laundary', '_id name').exec()
     if (!shop)
       return res.status('400').json({
         error: "Shop not found"
@@ -118,7 +119,7 @@ const list = async (req, res) => {
 
 const listByOwner = async (req, res) => {
   try {
-    let shops = await Shop.find({owner: req.profile._id}).populate('owner', '_id name')
+    let shops = await Shop.find({owner: req.profile._id}).populate('laundry', '_id name')
     res.json(shops)
   } catch (err){
     return res.status(400).json({

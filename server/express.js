@@ -7,7 +7,7 @@ import helmet from 'helmet'
 import userRoutes from './routes/user.routes.js'
 import authRoutes from './routes/auth.routes.js'
 import shopRoutes from './routes/shop.routes.js'
-// import productRoutes from './routes/product.routes.js'
+ import bookingRoutes from './routes/booking.routes.js'
 // import orderRoutes from './routes/order.routes.js'
 
 const app = express()
@@ -18,7 +18,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/', userRoutes)
 app.use('/', authRoutes)
 app.use('/', shopRoutes)
-// app.use('/', productRoutes)
+ app.use('/', bookingRoutes)
 // app.use('/', orderRoutes)
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))

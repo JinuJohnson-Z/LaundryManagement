@@ -1,14 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { makeStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import Typography from '@material-ui/core/Typography';
-import Avatar from '@material-ui/core/Avatar';
-import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
-import Icon from '@material-ui/core/Icon';
-import { read } from './api-laundry.js';
+import React, {useState, useEffect} from 'react'
+import { makeStyles } from '@material-ui/core/styles'
+import Card from '@material-ui/core/Card'
+import CardContent from '@material-ui/core/CardContent'
+import Typography from '@material-ui/core/Typography'
+import Avatar from '@material-ui/core/Avatar'
+import Grid from '@material-ui/core/Grid'
+import {read} from './api-laundry.js'
+import {Redirect, Link} from 'react-router-dom'
+import IconButton from '@material-ui/core/IconButton'
+import Icon from '@material-ui/core/Icon'
+import Edit from '@material-ui/icons/Phone.js'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -33,46 +34,68 @@ const useStyles = makeStyles(theme => ({
     height: 100,
     margin: 'auto'
   },
-  addButton: {
-    float: 'right'
-  },
-  leftIcon: {
-    marginRight: "8px"
+  productTitle: {
+    padding:`${theme.spacing(3)}px ${theme.spacing(2.5)}px ${theme.spacing(1)}px ${theme.spacing(2)}px`,
+    color: theme.palette.openTitle,
+    width: '100%',
+    fontSize: '1.2em'
   }
-}));
+}))
 
-export default function Laundry({ match }) {
-  const classes = useStyles();
-  const [laundry, setLaundry] = useState('');
-  const [error, setError] = useState('');
+export default function Shop({match}) {
+  const classes = useStyles()
+  const [laundry, setShop] = useState('')
+  const [error, setError] = useState('')
 
   useEffect(() => {
-    const abortController = new AbortController();
-    const signal = abortController.signal;
+    const abortController = new AbortController()
+    const signal = abortController.signal
 
-    const fetchData = async () => {
-      try {
-        const laundryData = await read({ laundryId: match.params.laundryId }, signal);
-        setLaundry(laundryData);
-
-        } catch (error) {
-        setError(error.message);
+    // listByShop({
+    //   laundryId: match.params.laundryId
+    // }, signal).then((data)=>{
+    //   if (data.error) {
+    //     setError(data.error)
+    //   } 
+    // })
+    read({
+      laundryId: match.params.laundryId
+    }, signal).then((data) => {
+      if (data.error) {
+        setError(data.error)
+      } else {
+        setShop(data)
       }
-    };
+    })
 
-    fetchData();
+    return function cleanup(){
+      abortController.abort()
+    }
 
-    return () => {
-      abortController.abort();
-    };
-  }, [match.params.laundryId]);
+  }, [match.params.laundryId])
+  useEffect(() => {
+    const abortController = new AbortController()
+    const signal = abortController.signal
 
-  const logoUrl = laundry._id
-    ? `/api/laundry/logo/${laundry._id}?${new Date().getTime()}`
-    : '/api/laundry/defaultphoto';
+    // listByShop({
+      
+    //   laundryId: match.params.laundryId
+    // }, signal).then((data)=>{
+    //   if (data.error) {
+    //     setError(data.error)
+    //   } 
+    // })
 
-  return (
-    <div className={classes.root}>
+    return function cleanup(){
+      abortController.abort()
+    }
+
+  }, [match.params.laundryId])
+
+    const logoUrl = laundry._id
+          ? `/api/laundry/logo/${laundry._id}?${new Date().getTime()}`
+          : '/api/laundry/defaultphoto'
+    return (<div className={classes.root}>
       <Grid container spacing={8}>
         <Grid item xs={4} sm={4}>
           <Card className={classes.card}>
@@ -82,27 +105,21 @@ export default function Laundry({ match }) {
               </Typography>
               <br/>
               <Avatar src={logoUrl} className={classes.bigAvatar}/><br/>
-              <Typography type="subheading" component="h2" className={classes.subheading}>
-                {laundry.description}
-              </Typography><br/>
+                <Typography type="subheading" component="h2" className={classes.subheading}>
+                  {laundry.location}
+                </Typography><br/>
+                <Link to={"/bookings/" + match.params.laundryId}>
+                      <IconButton aria-label="Edit" color="primary">
+                        <Edit/>
+                      </IconButton>
+                    </Link>
             </CardContent>
           </Card>
         </Grid>
         <Grid item xs={8} sm={8}>
           <Card>
-            <Typography type="title" className={classes.title}>
-              New Laundrys
-              <span className={classes.addButton}>
-                <Link to="/seller/laundry/new">
-                  <Button color="primary" variant="contained">
-                    <Icon className={classes.leftIcon}>add_box</Icon>  New Laundry
-                  </Button>
-                </Link>
-              </span>
-            </Typography>
-          </Card>
+                     </Card>
         </Grid>
       </Grid>
-    </div>
-  );
+    </div>)
 }

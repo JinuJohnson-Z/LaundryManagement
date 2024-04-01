@@ -7,7 +7,7 @@ const ShopSchema = new mongoose.Schema({
         trim: true,
         required: 'Name is required'
     },
-    description: {
+    location: {
         type: String,
         trim: true
     },
@@ -25,4 +25,4 @@ const ShopSchema = new mongoose.Schema({
         default: Date.now
     },
 });
-export default mongoose.model('Shop', ShopSchema);
+export default mongoose.model('Laundry', ShopSchema);

@@ -7,13 +7,12 @@ import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
 import Icon from '@material-ui/core/Icon'
 import Avatar from '@material-ui/core/Avatar'
-import auth from '../auth/auth-helper.js'
+import auth from './../auth/auth-helper'
 import FileUpload from '@material-ui/icons/AddPhotoAlternate'
 import { makeStyles } from '@material-ui/core/styles'
 import {read, update} from './api-laundry.js'
 import {Redirect} from 'react-router-dom'
 import Grid from '@material-ui/core/Grid'
-import NewLaundry from './NewLaundry.jsx'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -58,7 +57,7 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export default function EditLaundry ({match}) {
+export default function EditShop ({match}) {
   const classes = useStyles()
   const [values, setValues] = useState({
       name: '',
@@ -72,6 +71,7 @@ export default function EditLaundry ({match}) {
   useEffect(() => {
     const abortController = new AbortController()
     const signal = abortController.signal
+    debugger
     read({
       laundryId: match.params.laundryId
     }, signal).then((data) => {
@@ -87,15 +87,15 @@ export default function EditLaundry ({match}) {
   }, [])
 
   const clickSubmit = () => {
-    let laundryData = new FormData()
-    values.name && laundryData.append('name', values.name)
-    values.location && laundryData.append('location', values.location)
-    values.image && laundryData.append('image', values.image)
+    let shopData = new FormData()
+    values.name && shopData.append('name', values.name)
+    values.location && shopData.append('location', values.location)
+    values.image && shopData.append('image', values.image)
     update({
       laundryId: match.params.laundryId
     }, {
       t: jwt.token
-    }, laundryData).then((data) => {
+    }, shopData).then((data) => {
       if (data.error) {
         setValues({...values, error: data.error})
       } else {
@@ -113,9 +113,9 @@ export default function EditLaundry ({match}) {
     const logoUrl = values.id
           ? `/api/laundry/logo/${values.id}?${new Date().getTime()}`
           : '/api/laundry/defaultphoto'
-    // if (values.redirect) {
-    //   return (<Redirect to={'/seller/laundry'}/>)
-    // }
+    if (values.redirect) {
+      return (<Redirect to={'/seller/mylaundry'}/>)
+    }
     return (<div className={classes.root}>
       <Grid container spacing={8}>
         <Grid item xs={6} sm={6}>
@@ -136,9 +136,9 @@ export default function EditLaundry ({match}) {
               <TextField id="name" label="Name" className={classes.textField} value={values.name} onChange={handleChange('name')} margin="normal"/><br/>
               <TextField
                 id="multiline-flexible"
-                label="location"
+                label="Location"
                 multiline
-                rows="3"
+                minRows="3"
                 value={values.location}
                 onChange={handleChange('location')}
                 className={classes.textField}
@@ -159,9 +159,9 @@ export default function EditLaundry ({match}) {
             </CardActions>
           </Card>
           </Grid>
-          {/* <Grid item xs={6} sm={6}>
-            <NewLaundry laundryId={match.params.laundryId}/>
-          </Grid> */}
+          <Grid item xs={6} sm={6}>
+            {/* <MyProducts shopId={match.params.shopId}/> */}
+          </Grid>
         </Grid>
     </div>)
 }

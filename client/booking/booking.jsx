@@ -9,7 +9,7 @@ import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
 import Icon from '@material-ui/core/Icon'
 import { makeStyles } from '@material-ui/core/styles'
-import {create} from './api-laundry.js'
+import {create} from './api-booking.js'
 import {Link, Redirect} from 'react-router-dom'
 
 const useStyles = makeStyles(theme => ({
@@ -45,12 +45,11 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export default function NewShop() {
+export default function MyBookings({match}) {
   const classes = useStyles()
   const [values, setValues] = useState({
-      name: '',
-      location: '',
-      image: '',
+      date: '',
+      duration: '',
       redirect: false,
       error: ''
   })
@@ -64,11 +63,11 @@ export default function NewShop() {
   }
   const clickSubmit = () => {
     let shopData = new FormData()
-    values.name && shopData.append('name', values.name)
-    values.location && shopData.append('location', values.location)
-    values.image && shopData.append('image', values.image)
+    values.date && shopData.append('date', values.date)
+    values.duration && shopData.append('duration', values.duration)
     create({
-      userId: jwt.user._id
+        laundryId: match.params.laundryId
+
     }, {
       t: jwt.token
     }, shopData).then((data) => {
@@ -87,24 +86,17 @@ export default function NewShop() {
       <Card className={classes.card}>
         <CardContent>
           <Typography type="headline" component="h2" className={classes.title}>
-            New Laundries
+            New <Booking></Booking>
           </Typography>
           <br/>
-          <input accept="image/*" onChange={handleChange('image')} className={classes.input} id="icon-button-file" type="file" />
-          <label htmlFor="icon-button-file">
-            <Button variant="contained" color="secondary" component="span">
-              Upload Logo
-              <FileUpload/>
-            </Button>
-          </label> <span className={classes.filename}>{values.image ? values.image.name : ''}</span><br/>
-          <TextField id="name" label="Name" className={classes.textField} value={values.name} onChange={handleChange('name')} margin="normal"/><br/>
+          <TextField id="date" label="Date" className={classes.textField} value={values.date} onChange={handleChange('date')} margin="normal"/><br/>
           <TextField
             id="multiline-flexible"
-            label="Description"
+            label="duration"
             multiline
             minRows="2"
-            value={values.description}
-            onChange={handleChange('location')}
+            value={values.duration}
+            onChange={handleChange('duration')}
             className={classes.textField}
             margin="normal"
           /><br/> {
