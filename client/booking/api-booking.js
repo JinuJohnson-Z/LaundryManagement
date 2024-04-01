@@ -1,6 +1,6 @@
 const create = async (params, credentials, laundry) => {
     try {
-      let response = await fetch('/api/laundry/by/'+ params.userId, {
+      let response = await fetch('/api/bookings/by/'+ params.laundryId, {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
@@ -17,7 +17,7 @@ const create = async (params, credentials, laundry) => {
   
   const list = async (signal) => {
     try {
-      let response = await fetch('/api/laundry', {
+      let response = await fetch('/api/bookings', {
         method: 'GET',
         signal: signal
       })
@@ -29,7 +29,7 @@ const create = async (params, credentials, laundry) => {
   
   const listByOwner = async (params, credentials, signal) => {
     try {
-      let response = await fetch('/api/laundry/by/'+params.userId, {
+      let response = await fetch('/api/bookings/by/'+params.laundryId, {
         method: 'GET',
         signal: signal,
         headers: {
@@ -46,7 +46,7 @@ const create = async (params, credentials, laundry) => {
   const read = async (params, signal) => {
     debugger
     try {
-      let response = await fetch('/api/laundry/' + params.laundryId, {
+      let response = await fetch('/api/bookings' + params.laundryId, {
         method: 'GET',
         signal: signal,
       })
@@ -58,7 +58,7 @@ const create = async (params, credentials, laundry) => {
   
   const update = async (params, credentials, laundry) => {
     try {
-      let response = await fetch('/api/laundry/' + params.laundryId, {
+      let response = await fetch('/api/bookings/' + params.laundryId, {
         method: 'PUT',
         headers: {
           'Accept': 'application/json',
@@ -74,7 +74,7 @@ const create = async (params, credentials, laundry) => {
   
   const remove = async (params, credentials) => {
     try {
-      let response = await fetch('/api/laundry/' + params.laundryId, {
+      let response = await fetch('/api/bookings/' + params.laundryId, {
         method: 'DELETE',
         headers: {
           'Accept': 'application/json',

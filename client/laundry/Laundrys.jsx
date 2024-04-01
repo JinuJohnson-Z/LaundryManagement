@@ -31,7 +31,7 @@ const useStyles = makeStyles(theme => ({
   subheading: {
     color: theme.palette.text.secondary
   },
-  laundryTitle: {
+  shopTitle: {
     fontSize: '1.2em',
     marginBottom: '5px'
   },
@@ -39,9 +39,9 @@ const useStyles = makeStyles(theme => ({
     padding: '24px'
   }
 }))
-export default function Laundrys(){
+export default function Shops(){
   const classes = useStyles()
-  const [laundrys, setLaundrys] = useState([])
+  const [laundrys, setShops] = useState([])
 
   useEffect(() => {
     const abortController = new AbortController()
@@ -50,7 +50,7 @@ export default function Laundrys(){
       if (data.error) {
         console.log(data.error)
       } else {
-        setLaundrys(data)
+        setShops(data)
       }
     })
     return function cleanup(){
@@ -63,22 +63,22 @@ export default function Laundrys(){
     <div>
       <Paper className={classes.root} elevation={4}>
         <Typography type="title" className={classes.title}>
-          All Laundrys
+          All Laundries
         </Typography>
         <List dense>
           {laundrys.map((laundry, i) => {
-            return <Link to={"/seller/laundry/edit/"+laundry._id} key={i}>
+            return <Link to={"/laundry/"+laundry._id} key={i}>
               <Divider/>
               <ListItem button>
                 <ListItemAvatar>
                   <Avatar className={classes.avatar}  src={'/api/laundry/logo/'+laundry._id+"?" + new Date().getTime()}/>
                 </ListItemAvatar>
                 <div className={classes.details}>
-                  <Typography type="headline" component="h2" color="primary" className={classes.laundryTitle}>
+                  <Typography type="headline" component="h2" color="primary" className={classes.shopTitle}>
                     {laundry.name}
                   </Typography>
                   <Typography type="subheading" component="h4" className={classes.subheading}>
-                    {laundry.description}
+                    {laundry.location}
                   </Typography>
                 </div>
               </ListItem>

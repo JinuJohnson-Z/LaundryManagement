@@ -13,10 +13,10 @@ import Button from '@material-ui/core/Button'
 import Typography from '@material-ui/core/Typography'
 import Edit from '@material-ui/icons/Edit'
 import Divider from '@material-ui/core/Divider'
-import auth from '../auth/auth-helper.js'
+import auth from './../auth/auth-helper'
 import {listByOwner} from './api-laundry.js'
 import {Redirect, Link} from 'react-router-dom'
-import DeleteLaundry from './DeleteLaundry.jsx'
+import DeleteShop from './DeleteLaundry.jsx'
 
 const useStyles = makeStyles(theme => ({
   root: theme.mixins.gutters({
@@ -38,9 +38,9 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export default function MyLaundrys(){
+export default function MyShops(){
   const classes = useStyles()
-  const [laundrys, setLaundrys] = useState([])
+  const [shops, setShops] = useState([])
   const [redirectToSignin, setRedirectToSignin] = useState(false)
   const jwt = auth.isAuthenticated()
 
@@ -53,7 +53,7 @@ export default function MyLaundrys(){
       if (data.error) {
         setRedirectToSignin(true)
       } else {
-        setLaundrys(data)
+        setShops(data)
       }
     })
     return function cleanup(){
@@ -61,11 +61,11 @@ export default function MyLaundrys(){
     }
   }, [])
 
-  const removeLaundry = (laundry) => {
-    const updatedLaundrys = [...laundrys]
-    const index = updatedLaundrys.indexOf(laundry)
-    updatedLaundrys.splice(index, 1)
-    setLaundrys(updatedLaundrys)
+  const removeShop = (laundry) => {
+    const updatedShops = [...shops]
+    const index = updatedShops.indexOf(laundry)
+    updatedShops.splice(index, 1)
+    setShops(updatedShops)
   }
 
     if (redirectToSignin) {
@@ -75,7 +75,7 @@ export default function MyLaundrys(){
     <div>
       <Paper className={classes.root} elevation={4}>
         <Typography type="title" className={classes.title}>
-          Your Laundrys
+          Your Laundries
           <span className={classes.addButton}>
             <Link to="/seller/laundry/new">
               <Button color="primary" variant="contained">
@@ -85,22 +85,26 @@ export default function MyLaundrys(){
           </span>
         </Typography>
         <List dense>
-        {laundrys.map((laundry, i) => {
+        {shops.map((laundry, i) => {
             return   <span key={i}>
               <ListItem button>
                 <ListItemAvatar>
                   <Avatar src={'/api/laundry/logo/'+laundry._id+"?" + new Date().getTime()}/>
                 </ListItemAvatar>
                 <ListItemText primary={laundry.name} secondary={laundry.description}/>
-                { 
+                { auth.isAuthenticated().user && auth.isAuthenticated().user._id == laundry.owner._id &&
                   (<ListItemSecondaryAction>
-                    
+                    {/* <Link to={"/seller/orders/" + laundry.name+ '/'+laundry._id}>
+                      <Button aria-label="Orders" color="primary">
+                        View Orders
+                      </Button>
+                    </Link> */}
                     <Link to={"/seller/laundry/edit/" + laundry._id}>
                       <IconButton aria-label="Edit" color="primary">
                         <Edit/>
                       </IconButton>
                     </Link>
-                    <DeleteLaundry laundry={laundry} onRemove={removeLaundry}/>
+                    <DeleteShop laundry={laundry} onRemove={removeShop}/>
                   </ListItemSecondaryAction>)
                 }
               </ListItem>

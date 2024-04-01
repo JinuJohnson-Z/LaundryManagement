@@ -8,7 +8,7 @@ const router = express.Router()
 router.route('/api/laundry')
   .get(shopCtrl.list)
 
-router.route('/api/laundry/:shopId')
+router.route('/api/laundry/:laundryId')
   .get(shopCtrl.read)
 
 router.route('/api/laundry/by/:userId')
@@ -27,5 +27,6 @@ router.route('/api/laundry/defaultphoto')
 
 router.param('laundryId', shopCtrl.laundryByID)
 router.param('userId', userCtrl.userByID)
+
 
 export default router

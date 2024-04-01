@@ -9,9 +9,9 @@ import DialogContent from '@material-ui/core/DialogContent'
 import DialogContentText from '@material-ui/core/DialogContentText'
 import DialogTitle from '@material-ui/core/DialogTitle'
 import auth from '../auth/auth-helper.js'
-import {remove} from './api-laundry.js'
+import {remove} from './api-booking.js'
 
-export default function DeleteShop(props) {
+export default function DeleteBooking(props) {
   const [open, setOpen] = useState(false)
   
   const jwt = auth.isAuthenticated()
@@ -56,7 +56,7 @@ export default function DeleteShop(props) {
       </Dialog>
     </span>)
 }
-DeleteShop.propTypes = {
+DeleteBooking.propTypes = {
   laundry: PropTypes.object.isRequired,
   onRemove: PropTypes.func.isRequired
 }

@@ -14,7 +14,7 @@ import MyLaundry from './laundry/MyLaundry'
 import Laundry from './laundry/Laundry'
 import EditLaundry from './laundry/EditLaundry'
 import StripeConnect from './user/StripeConnect'
-
+import MyBookings from './booking/booking'
 const MainRouter = () => {
   return (<div>
       <Menu/>
@@ -30,10 +30,10 @@ const MainRouter = () => {
         <Route path="/laundry/:laundryId" component={Laundry}/>
 
 
-        <PrivateRoute path="/seller/laundry" component={MyLaundry}/>
+        <PrivateRoute path="/seller/mylaundry" component={MyLaundry}/>
         <PrivateRoute path="/seller/laundry/new" component={NewLaundry}/>
         <PrivateRoute path="/seller/laundry/edit/:laundryId" component={EditLaundry}/>
-
+        <PrivateRoute path="/bookings/:laundryId" component={MyBookings}/>
         <Route path="/seller/stripe/connect" component={StripeConnect}/>
       </Switch>
     </div>)
