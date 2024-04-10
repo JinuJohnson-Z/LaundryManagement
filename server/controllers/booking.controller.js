@@ -6,18 +6,15 @@ import fs from 'fs'
 //import defaultImage from './../../client/assets/images/default.png'
 
 const create = (req, res) => {
-    debugger
-  console.log("no create");
+  debugger
+  console.log("no create",req.profile);
   let form = new formidable.IncomingForm()
   form.keepExtensions = true
   form.parse(req, async (err, fields, files) => {
-    if (err) {
-      res.status(400).json({
-        message: "Image could not be uploaded"
-      })
-    }
+    
     let shop = new Shop(fields)
-   // shop.owner= req.profile
+    shop.laundry= req.params.laundryId;
+    shop.owner=req.profile;
     if(files.image){
       shop.image.data = fs.readFileSync(files.image.path)
       shop.image.contentType = files.image.type
@@ -36,7 +33,7 @@ const create = (req, res) => {
 const laundryByID = async (req, res, next, id) => {
   debugger
   try {
-    let shop = await Shop.findById(id).populate('laundary', '_id name').exec()
+    let shop = await Shop.findById(id).populate('laundry', '_id name').exec()
     if (!shop)
       return res.status('400').json({
         error: "Shop not found"
@@ -116,15 +113,15 @@ const list = async (req, res) => {
     })
   }
 }
-
-const listByOwner = async (req, res) => {
+const listByLaundry = async (req, res) => {
   try {
-    let shops = await Shop.find({owner: req.profile._id}).populate('laundry', '_id name')
-    res.json(shops)
-  } catch (err){
+    const { laundryId } = req.params; // Assuming the laundry ID is a route parameter
+    let shops = await Shop.find({ laundry: laundryId }).populate('laundry', '_id name');
+    res.json(shops);
+  } catch (err) {
     return res.status(400).json({
       error: errorHandler.getErrorMessage(err)
-    })
+    });
   }
 }
 
@@ -144,7 +141,7 @@ export default {
   photo,
   defaultPhoto,
   list,
-  listByOwner,
+  listByLaundry,
   read,
   update,
   isOwner,
